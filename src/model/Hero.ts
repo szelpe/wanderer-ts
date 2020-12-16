@@ -1,13 +1,7 @@
+import { Direction } from "./Direction";
 import { GameObject } from "./GameObject";
 import { Movement } from "./Movement";
 import { Tile } from "./Tile";
-
-export enum Direction {
-    Up,
-    Down,
-    Left,
-    Right
-}
 
 export class Hero extends GameObject {
     movement?: Movement;
@@ -17,36 +11,15 @@ export class Hero extends GameObject {
         super(x, y);
     }
 
-    moveRight() {
-        this.direction = Direction.Right;
-        if (!this.currentTile.right.isWalkable) return;
+    move(direction: Direction) {
+        this.direction = direction;
 
-        this.x++;
-        this.currentTile = this.currentTile.right;
-    }
+        let nextTile = this.currentTile.getNeighbor(direction);
 
-    moveLeft() {
-        this.direction = Direction.Left;
-        if (!this.currentTile.left.isWalkable) return;
-
-        this.x--;
-        this.currentTile = this.currentTile.left;
-    }
-
-    moveUp() {
-        this.direction = Direction.Up;
-        if (!this.currentTile.upper.isWalkable) return;
-
-        this.y--;
-        this.currentTile = this.currentTile.upper;
-    }
-
-    moveDown() {
-        this.direction = Direction.Down;
-        if (!this.currentTile.lower.isWalkable) return;
-
-        this.y++;
-        this.currentTile = this.currentTile.lower;
+        if (!nextTile.isWalkable) return;
+        this.currentTile = nextTile;
+        this.x = nextTile.X;
+        this.y = nextTile.Y;
     }
 
     update() {
@@ -59,17 +32,9 @@ export class Hero extends GameObject {
             return null;
         }
 
-        if (nextTile == this.currentTile.upper) {
-            this.moveUp();
-        }
-        if (nextTile == this.currentTile.lower) {
-            this.moveDown();
-        }
-        if (nextTile == this.currentTile.left) {
-            this.moveLeft();
-        }
-        if (nextTile == this.currentTile.right) {
-            this.moveRight();
-        }
+        Object.keys(Direction)
+            .map(direction => Direction[direction])
+            .filter(direction => this.currentTile.getNeighbor(direction) === nextTile)
+            .forEach(direction => this.move(direction));
     }
 }

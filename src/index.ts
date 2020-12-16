@@ -8,14 +8,13 @@ import pond from '../img/pond.png';
 import wall from '../img/wall.png';
 import { Board } from './model/Board';
 import { GameObject } from './model/GameObject';
-import { Direction, Hero } from './model/Hero';
+import { Hero } from './model/Hero';
+import { Direction } from "./model/Direction";
 import { Movement } from './model/Movement';
 import { Floor, Tile, Wall } from './model/Tile';
 
 let canvas = document.getElementById('game') as HTMLCanvasElement;
 let ctx = canvas.getContext('2d');
-
-// ctx.fillRect(100, 100, 30, 30);
 
 let imageFileNames = {
     floor,
@@ -77,13 +76,13 @@ class Game {
 
     getImageFor(gameObject: GameObject) {
         if (gameObject instanceof Hero) {
-            if(gameObject.direction === Direction.Down)
+            if (gameObject.direction === Direction.Down)
                 return images.heroDown;
-            if(gameObject.direction === Direction.Up)
+            if (gameObject.direction === Direction.Up)
                 return images.heroUp;
-            if(gameObject.direction === Direction.Left)
+            if (gameObject.direction === Direction.Left)
                 return images.heroLeft;
-            if(gameObject.direction === Direction.Right)
+            if (gameObject.direction === Direction.Right)
                 return images.heroRight;
         }
         if (gameObject instanceof Floor) {
@@ -97,20 +96,18 @@ class Game {
     }
 
     handleKeyDown(e: KeyboardEvent) {
-        switch (e.key) {
-            case "ArrowRight":
-                this.hero.moveRight();
-                break;
-            case "ArrowLeft":
-                this.hero.moveLeft();
-                break;
-            case "ArrowDown":
-                this.hero.moveDown();
-                break;
-            case "ArrowUp":
-                this.hero.moveUp();
-                break;
-        }
+        let arrowMap = {
+            "ArrowRight": Direction.Right,
+            "ArrowLeft": Direction.Left,
+            "ArrowDown": Direction.Down,
+            "ArrowUp": Direction.Up,
+        };
+
+        let direction = arrowMap[e.key];
+
+        if (direction == null) return;
+
+        this.hero.move(direction);
 
         this.draw();
     }

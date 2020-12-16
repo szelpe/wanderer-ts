@@ -1,3 +1,4 @@
+import { Direction } from "./Direction";
 import { Level } from "./Level";
 import { Tile } from "./Tile";
 import { VoidTile } from "./VoidTile";
@@ -22,10 +23,10 @@ export class Board {
 
     setNeighbors() {
         this.forEachTile((tile, x, y) => {
-            tile.left = this.getTile(x - 1, y);
-            tile.right = this.getTile(x + 1, y);
-            tile.upper = this.getTile(x, y - 1);
-            tile.lower = this.getTile(x, y + 1);
+            tile.addNeightbor(Direction.Left, this.getTile(x - 1, y));
+            tile.addNeightbor(Direction.Right, this.getTile(x + 1, y));
+            tile.addNeightbor(Direction.Up, this.getTile(x, y - 1));
+            tile.addNeightbor(Direction.Down, this.getTile(x, y + 1));
         });
     }
 
